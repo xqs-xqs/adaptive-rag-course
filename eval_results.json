@@ -1,0 +1,114 @@
+{
+  "retrieval": {
+    "precision_at_k": 0.2,
+    "recall_at_k": 1.0,
+    "mrr": 0.6666666666666667,
+    "avg_latency_ms": 3934.587001800537,
+    "p95_latency_ms": 5355.758905410767,
+    "per_question": [
+      {
+        "question": "What is the exam weighting for COMP5422?",
+        "precision": 0.2,
+        "recall": 1.0,
+        "mrr": 1.0,
+        "latency_ms": 4997.012615203857
+      },
+      {
+        "question": "What topics does COMP5422 cover?",
+        "precision": 0.2,
+        "recall": 1.0,
+        "mrr": 0.5,
+        "latency_ms": 2812.825918197632
+      },
+      {
+        "question": "What are the references for COMP5422?",
+        "precision": 0.2,
+        "recall": 1.0,
+        "mrr": 0.5,
+        "latency_ms": 3331.52437210083
+      },
+      {
+        "question": "Are there any courses related to multimedia computing?",
+        "precision": 0.2,
+        "recall": 1.0,
+        "mrr": 0.3333333333333333,
+        "latency_ms": 5355.758905410767
+      },
+      {
+        "question": "When is COMP5422's class?",
+        "precision": 0.2,
+        "recall": 1.0,
+        "mrr": 1.0,
+        "latency_ms": 3175.8131980895996
+      }
+    ]
+  },
+  "generation": {
+    "avg_completeness": 5.0,
+    "accuracy_rate": 1.0,
+    "per_question": [
+      {
+        "question": "What is the exam weighting for COMP5422?",
+        "completeness": 5.0,
+        "accurate": true
+      },
+      {
+        "question": "What topics does COMP5422 cover?",
+        "completeness": 5.0,
+        "accurate": true
+      },
+      {
+        "question": "What are the references for COMP5422?",
+        "completeness": 5.0,
+        "accurate": true
+      },
+      {
+        "question": "Are there any courses related to multimedia computing?",
+        "completeness": 5.0,
+        "accurate": true
+      },
+      {
+        "question": "When is COMP5422's class?",
+        "completeness": 5.0,
+        "accurate": true
+      }
+    ]
+  },
+  "ablation": [
+    {
+      "Config": "Vector only",
+      "Precision@5": "0.20",
+      "Recall@5": "1.00",
+      "MRR": "0.90",
+      "Avg Latency": "2989 ms"
+    },
+    {
+      "Config": "+ BM25 (RRF)",
+      "Precision@5": "0.20",
+      "Recall@5": "1.00",
+      "MRR": "0.67",
+      "Avg Latency": "2698 ms"
+    },
+    {
+      "Config": "+ Summary Index",
+      "Precision@5": "0.20",
+      "Recall@5": "1.00",
+      "MRR": "0.67",
+      "Avg Latency": "3122 ms"
+    },
+    {
+      "Config": "+ Multi-Query Expansion",
+      "Precision@5": "0.20",
+      "Recall@5": "1.00",
+      "MRR": "0.67",
+      "Avg Latency": "3718 ms"
+    },
+    {
+      "Config": "Full pipeline",
+      "Precision@5": "0.20",
+      "Recall@5": "1.00",
+      "MRR": "0.70",
+      "Avg Latency": "3347 ms"
+    }
+  ]
+}

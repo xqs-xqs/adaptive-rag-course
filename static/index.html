@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PolyU Smart Course Advisor</title>
+    <style>
+        :root {
+            --bg-color: #f8f7f4;
+            --card-bg: #ffffff;
+            --border-color: #d3d1c7;
+            --text-main: #1a1a18;
+            --text-secondary: #73726c;
+            --placeholder: #b4b2a9;
+            --tag-bg: #eeeee8;
+            --user-bg: #1a1a18;
+            --source-dot: #5DCAA5;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-size: 17px;
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        #app {
+            width: 100%;
+            max-width: 640px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* --- Landing State (State A) --- */
+        #landing-view {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .hero-svg {
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 26px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+        }
+
+        .suggestion-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            max-width: 500px;
+            margin-bottom: 40px;
+        }
+
+        .tag {
+            background: var(--tag-bg);
+            color: var(--text-main);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .tag:hover {
+            background: #e0ded6;
+        }
+
+        /* --- Chat State (State B) --- */
+        #chat-view {
+            display: none;
+            flex: 1;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-color);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .back-btn:hover {
+            color: var(--text-main);
+        }
+
+        #message-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            padding-bottom: 100px; /* Space for input area */
+        }
+
+        .msg-row {
+            display: flex;
+            width: 100%;
+        }
+
+        .msg-row.user { justify-content: flex-end; }
+        .msg-row.bot { justify-content: flex-start; }
+
+        .msg-bubble {
+            max-width: 85%;
+            padding: 14px 18px;
+            word-wrap: break-word;
+        }
+
+        .msg-row.user .msg-bubble {
+            background: var(--user-bg);
+            color: #ffffff;
+            border-radius: 12px 12px 4px 12px;
+        }
+
+        .msg-row.bot .msg-bubble {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px 12px 12px 4px;
+        }
+
+        /* --- Source Tooltip --- */
+        .cite-dot { 
+            display: inline-block; 
+            width: 7px; 
+            height: 7px; 
+            background: #5DCAA5; 
+            border-radius: 50%; 
+            vertical-align: super; 
+            margin: 0 1px; 
+            cursor: pointer; 
+            position: relative; 
+            font-size: 0; 
+            line-height: 0; 
+            top: -2px; 
+        } 
+        .cite-tooltip { 
+            display: none; 
+            position: absolute; 
+            bottom: 14px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            background: #1a1a18; 
+            color: #fff; 
+            padding: 5px 10px; 
+            border-radius: 6px; 
+            font-size: 12px; 
+            white-space: nowrap; 
+            z-index: 10; 
+            pointer-events: none; 
+        } 
+        .cite-dot:hover .cite-tooltip { 
+            display: block; 
+        } 
+
+        /* --- Loading Dots --- */
+        .typing-indicator {
+            display: none;
+            padding: 14px 18px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px 12px 12px 4px;
+            align-self: flex-start;
+            width: fit-content;
+        }
+        .dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background: var(--placeholder);
+            border-radius: 50%;
+            margin: 0 2px;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+        .dot:nth-child(1) { animation-delay: -0.32s; }
+        .dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        /* --- Input Area --- */
+        .input-area {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 640px;
+            padding: 16px 20px;
+            background: linear-gradient(to top, var(--bg-color) 70%, transparent);
+        }
+
+        .input-box {
+            display: flex;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 6px 6px 6px 20px;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+
+        input {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 16px;
+            color: var(--text-main);
+        }
+        
+        input::placeholder { color: var(--placeholder); }
+
+        .send-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--text-main);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.2s;
+        }
+        
+        .send-btn:hover { opacity: 0.8; }
+        .send-btn:disabled { background: var(--placeholder); cursor: not-allowed; }
+
+        /* Markdown lists */
+        .msg-bubble ul {
+            margin-left: 20px;
+            margin-top: 8px;
+            margin-bottom: 8px;
+        }
+        .msg-bubble li { margin-bottom: 4px; }
+        
+        .typing-cursor {
+            display: inline;
+            color: #5DCAA5;
+            animation: blink 0.8s step-end infinite;
+            font-weight: 300;
+        }
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <!-- State A: Landing View -->
+    <div id="landing-view">
+        <div class="hero-svg">
+            <img src="https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=A%20vibrant%2C%20modern%20pixel%20art%20illustration%20of%20a%20male%20university%20student%20sitting%20comfortably%20at%20a%20wooden%20desk%20in%20a%20bright%20room.%20He%20is%20looking%20attentively%20at%20a%20computer%20monitor%20displaying%20code%2C%20with%20one%20hand%20on%20the%20keyboard%20and%20the%20other%20resting%20near%20a%20coffee%20mug.%20Above%20his%20head%20is%20a%20thought%20bubble%20indicating%20he%20is%20planning%20his%20course%20schedule.%20The%20color%20palette%20is%20warm%20and%20inviting%2C%20featuring%20soft%20blues%2C%20purples%2C%20and%20wood%20tones%2C%20with%20a%20clean%20isometric%20or%20detailed%20pixel%20art%20style.%20The%20scene%20feels%20lively%2C%20focused%2C%20and%20relatable.&image_size=landscape_4_3" alt="Student studying" style="width: 360px; height: 270px; border-radius: 16px; object-fit: cover; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+        </div>
+        
+        <h1>PolyU Smart Course Advisor</h1>
+        <div class="subtitle">Ask anything about courses, schedules, assessments, and more</div>
+        
+        <div class="suggestion-tags">
+            <div class="tag" onclick="ask('What courses cover multimedia?')">What courses cover multimedia?</div>
+            <div class="tag" onclick="ask('How is COMP5422 assessed?')">How is COMP5422 assessed?</div>
+            <div class="tag" onclick="ask('Recommend 3-credit courses')">Recommend 3-credit courses</div>
+            <div class="tag" onclick="ask('When is COMP5422\'s class time?')">When is COMP5422's class time?</div>
+        </div>
+    </div>
+
+    <!-- State B: Chat View -->
+    <div id="chat-view">
+        <div class="header">
+            <button class="back-btn" onclick="goBack()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                New conversation
+            </button>
+        </div>
+        
+        <div id="message-list">
+            <!-- Messages injected here -->
+            <div class="typing-indicator" id="typing">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Persistent Input Area -->
+    <div class="input-area">
+        <div class="input-box">
+            <input type="text" id="input" placeholder="Ask about any course..." onkeypress="handleEnter(event)">
+            <button class="send-btn" id="sendBtn" onclick="ask()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let sessionId = '';
+    const landingView = document.getElementById('landing-view');
+    const chatView = document.getElementById('chat-view');
+    const messageList = document.getElementById('message-list');
+    const typingIndicator = document.getElementById('typing');
+    const inputEl = document.getElementById('input');
+    const sendBtn = document.getElementById('sendBtn');
+
+    function handleEnter(e) {
+        if (e.key === 'Enter') ask();
+    }
+
+    function switchToChatMode() {
+        landingView.style.display = 'none';
+        chatView.style.display = 'flex';
+    }
+
+    function switchToLandingMode() {
+        chatView.style.display = 'none';
+        landingView.style.display = 'flex';
+        // Clear chat messages except typing indicator
+        Array.from(messageList.children).forEach(child => {
+            if (child.id !== 'typing') child.remove();
+        });
+    }
+
+
+
+    function scrollToBottom() {
+        messageList.scrollTop = messageList.scrollHeight;
+    }
+
+    function renderMarkdown(text) {
+        if (!text) return '';
+        
+        let html = text
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+        // Basic list parsing
+        const lines = html.split('\n');
+        let inList = false;
+        let result = '';
+        
+        for (let i = 0; i < lines.length; i++) {
+            let line = lines[i];
+            
+            if (line.trim().startsWith('- ')) {
+                if (!inList) {
+                    result += '<ul>';
+                    inList = true;
+                }
+                result += `<li>${line.replace(/^- /, '').trim()}</li>`;
+            } else {
+                if (inList) {
+                    result += '</ul>';
+                    inList = false;
+                }
+                if (line.trim() !== '' || !inList) {
+                    result += line + '<br>';
+                }
+            }
+        }
+        if (inList) result += '</ul>';
+        
+        return result;
+    }
+
+    function renderAnswer(text, sources) {
+        if (!text) return '';
+        
+        let html = text
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+        // Replace [1] [2] with cite-dot tooltips
+        html = html.replace(/\[(\d+)\]/g, (match, num) => { 
+            const idx = parseInt(num) - 1; 
+            if (idx >= 0 && idx < sources.length) { 
+                const s = sources[idx]; 
+                return `<span class="cite-dot" data-index="${num}">` + 
+                       `<span class="cite-tooltip">[${num}] ${s.course_code} - ${s.section_type}</span>` + 
+                       `</span>`; 
+            } 
+            return match; 
+        });
+
+        // Basic list parsing
+        const lines = html.split('\n');
+        let inList = false;
+        let result = '';
+        
+        for (let i = 0; i < lines.length; i++) {
+            let line = lines[i];
+            
+            if (line.trim().startsWith('- ')) {
+                if (!inList) {
+                    result += '<ul>';
+                    inList = true;
+                }
+                result += `<li>${line.replace(/^- /, '').trim()}</li>`;
+            } else {
+                if (inList) {
+                    result += '</ul>';
+                    inList = false;
+                }
+                if (line.trim() !== '' || !inList) {
+                    result += line + '<br>';
+                }
+            }
+        }
+        if (inList) result += '</ul>';
+        
+        return result;
+    }
+
+    function addMessage(content, sender, sources = []) {
+        const row = document.createElement('div');
+        row.className = `msg-row ${sender}`;
+        
+        const bubble = document.createElement('div');
+        bubble.className = 'msg-bubble';
+        
+        if (sender === 'user') {
+            bubble.textContent = content;
+        } else {
+            bubble.innerHTML = renderAnswer(content, sources);
+        }
+        
+        row.appendChild(bubble);
+        messageList.insertBefore(row, typingIndicator); // Insert before typing dots
+        scrollToBottom();
+    }
+
+    // 辅助：转义 HTML（流式过程中先显示纯文本，防 XSS）
+    function escapeHtml(text) {
+        return text
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/\n/g, '<br>');
+    }
+
+    async function ask(text) {
+        const question = text || inputEl.value.trim();
+        if (!question) return;
+        inputEl.value = '';
+
+        switchToChatMode();
+        addMessage(question, 'user');
+
+        // 创建空的 bot 消息气泡（后续逐字填充）
+        const messagesDiv = document.getElementById('message-list');
+        const msgDiv = document.createElement('div');
+        msgDiv.className = 'message bot msg-bubble';
+        msgDiv.innerHTML = '<span class="typing-cursor">▍</span>';
+        messagesDiv.insertBefore(msgDiv, typingIndicator); // Insert before typing dots
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+        let sources = [];
+        let fullText = '';
+
+        try {
+            const res = await fetch('/api/ask/stream', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ question, session_id: sessionId })
+            });
+
+            const reader = res.body.getReader();
+            const decoder = new TextDecoder();
+            let buffer = '';
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+
+                buffer += decoder.decode(value, { stream: true });
+
+                // 按 SSE 协议解析：以 \n\n 分割
+                const parts = buffer.split('\n\n');
+                buffer = parts.pop(); // 最后一段可能不完整，留在 buffer
+
+                for (const part of parts) {
+                    const line = part.replace(/^data: /, '').trim();
+                    if (!line) continue;
+
+                    try {
+                        const msg = JSON.parse(line);
+
+                        if (msg.type === 'meta') {
+                            sources = msg.sources || [];
+                            sessionId = msg.session_id;
+                        }
+                        else if (msg.type === 'token') {
+                            fullText += msg.content;
+                            // 实时更新气泡：纯文本 + 闪烁光标
+                            msgDiv.innerHTML = escapeHtml(fullText)
+                                + '<span class="typing-cursor">▍</span>';
+                            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                        }
+                        else if (msg.type === 'done') {
+                            // 流结束：用完整文本做 markdown + 引用渲染
+                            if (sources.length > 0) {
+                                msgDiv.innerHTML = renderAnswer(fullText, sources);
+                            } else {
+                                msgDiv.innerHTML = renderMarkdown(fullText);
+                            }
+                            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                        }
+                    } catch (e) {
+                        console.warn('SSE parse error:', e);
+                    }
+                }
+            }
+        } catch (err) {
+            msgDiv.innerHTML = 'Sorry, something went wrong. Please try again.';
+        }
+    }
+
+    async function goBack() {
+        if (sessionId) {
+            try {
+                await fetch('/api/clear', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({session_id: sessionId})
+                });
+            } catch (e) {
+                console.error("Failed to clear session", e);
+            }
+        }
+        sessionId = '';
+        switchToLandingMode();
+    }
+</script>
+</body>
+</html>

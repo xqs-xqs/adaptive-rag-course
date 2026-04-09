@@ -1,0 +1,25 @@
+"Subject Code": "COMP5112" 
+
+"Subject Title": "Data Structures and Database Systems" 
+
+"Credit Value": "3" 
+
+"Level": "5" 
+
+"Pre-requisite/ Co-requisite/ Exclusion": "Nil" 
+
+"Class Time": "Monday 18:30-21:20"
+
+"Objectives": "The objectives of this subject are to: 1. apply data structures, sorting and searching algorithms in developing computer programs; 2. use and administrate a database system properly." 
+
+"Intended Learning Outcomes": "Upon completion of the subject, students will be able to: a. demonstrate a comprehensive understanding of data structures, sorting and searching algorithms; b. apply database systems and the associated tools in real-life problems; c. apply the principles and practices of good database design and analysis in real-life problems, leveraging emerging technologies for global challenges." 
+
+"Subject Synopsis/ Indicative Syllabus": "1. Data structures: representation and algorithms Linear structures: linked-lists, stacks, queues; tree structures: binary trees, balanced trees, tree traversals; common data structures: priority queues, heaps. 2. Sorting and searching algorithms sorting algorithms: bubble sort, insertion sort, selection sort, quick sort, merge sort, heap sort. 3. Basic concepts of database system and its applications; DBMS design objectives and its components; data independence. 4. Relational data model structure; relational algebra; SQL; relational constraints. 5. Database design Entity-relationship model; functional dependencies; normalization. 6. Data storage and querying File organization; indexing and hashing; query processing." 
+
+"Teaching/Learning Methodology": "This subject emphasizes the technical aspects of data structures and practical aspects of database systems. It is intended to equip the student with knowledge and experience on solving real-life problems by using data structures and database systems. The lectures will be used to deliver course material. Labs and tutorials will be used to practice exercises." 
+
+"Assessment Methods in Alignment with Intended Learning Outcomes": "1. Quizzes and Assignments: 30%; 2. Exam: 70%; Total: 100%" 
+
+"Student Study Effort Expected": "Class contact: Lecture 26 Hrs., Tutorial/Lab 13 Hrs.; Other student study effort: Assignments, reading book chapters 66 Hrs.; Total student study effort 105 Hrs." 
+
+"Reading List and References": "1. Frank M. Carrano, Data Abstraction & Problem Solving with C++: Walls & Mirrors, 7th Edition, Pearson, 2017. 2. Goodrich, M.T. and Tamassia, R., Data Structures and Algorithms in Java, 6th Edition, John Wiley, 2014. 3. A Silberschatz, H.F. Korth, S. Sudarshan. Database System Concepts, 7th Edition, McGraw Hill, 2019. 4. Hector Garcia-Molina, Jeffrey D. Ullman & Jennifer Widom. Database System Implementation, Prentice Hall, 3rd Edition, 2008." [cite: 29]
