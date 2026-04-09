@@ -4,6 +4,10 @@ An Adaptive-RAG system for course selection at The Hong Kong Polytechnic Univers
 
 <br />
 
+<img width="1633" height="1475" alt="image" src="https://github.com/user-attachments/assets/74caf991-b7df-4c26-a34a-6ed68434fa07" />
+
+
+
 ***
 
 ## ✨ Features
