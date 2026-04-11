@@ -373,7 +373,9 @@ async def retrieve(question: str, ablation_config: dict = None) -> dict:
         docs = do_hybrid(rewritten_query, metadata_filter=None, k=top_k)
 
     # ── Post-processing ──
-    max_per = 3 if intent.get("is_broad") else 2
+    # max_per = 3 if intent.get("is_broad") else 2
+    # max_per = 1 if intent.get("is_broad") else 2
+    max_per = 2 if intent.get("is_broad") else 2
     docs = diversity_filter(docs, max_per_course=max_per)
     docs = docs[:top_k]
     docs, parent_contexts = backfill_parents(docs)
