@@ -16,7 +16,7 @@ __pycache__/
 .idea/
 .vscode/
 
-Local data
+# Local data
 chroma_db/
 parent_store.json
 bm25_index.pkl
