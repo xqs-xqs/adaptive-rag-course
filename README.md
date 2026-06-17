@@ -441,21 +441,7 @@ A: This project targets Chinese-language course content where Qwen has strong na
 **Q: Production-ready?**
 A: This is a research/educational implementation with documented limitations (see the bundled mentor skill's `gotchas.md` for 16 specific issues). For production deployment, plan for: async LLM calls, Redis-backed conversation state, ChromaDB server mode (or Milvus/Qdrant for scale), Elasticsearch for BM25, multi-level caching, rate limiting, circuit breakers, and observability. See section "High Concurrency & Production Deployment" in [Future Work](#-future-work).
 
-## 🏷️ Recommended GitHub Topics
-
-
-
-```
-rag  retrieval-augmented-generation  adaptive-rag  agentic-rag  hybrid-rag  hybrid-retrieval
-hybrid-search  bm25  dense-retrieval  sparse-retrieval  rrf  reciprocal-rank-fusion
-parent-child-chunking  contextual-retrieval  query-decomposition  query-expansion
-intent-classification  chromadb  langchain  fastapi  qwen  dashscope  jieba  chinese-nlp
-llm  llm-chatbot  rag-chatbot  rag-pipeline  rag-evaluation  ablation-study
-faithfulness  groundedness  hallucination-detection  course-recommendation
-question-answering  semantic-search  vector-search  sse-streaming  multi-turn-dialogue
-async-python  python  polyu  hong-kong-polytechnic-university
-```
 
 ## License
 
-This project is for academic purposes at The Hong Kong Polytechnic University.
+This project is for academic and educational purposes.
